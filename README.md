@@ -34,15 +34,36 @@ You can check the [Releases](https://github.com/daslearning-org/image-to-animati
 
 ### 🐍 Run with Python
 
+**Requirements:**
+- Python 3.8 or higher
+
 1. Clone the repo
 ```bash
 git clone https://github.com/daslearning-org/image-to-animation-offline.git
 ```
 
-2. Run the application
+2. Navigate to the kivy directory
 ```bash
 cd image-to-animation-offline/kivy/
-pip install -r requirements.txt # virtual environment is recommended
+```
+
+3. Install dependencies (virtual environment is recommended)
+```bash
+# Create virtual environment
+python3 -m venv venv
+
+# Activate virtual environment
+# On Linux/Mac:
+source venv/bin/activate
+# On Windows:
+venv\Scripts\activate
+
+# Install requirements
+pip install -r requirements.txt
+```
+
+4. Run the application
+```bash
 python main.py
 ```
 

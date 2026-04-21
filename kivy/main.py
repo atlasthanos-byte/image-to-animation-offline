@@ -35,8 +35,47 @@ from kivy.properties import StringProperty, NumericProperty, ObjectProperty
 if platform == "android":
     from jnius import autoclass, PythonJavaClass, java_method
 
-# plyer for cross platform capabilities
-from plyer import filechooser
+# Custom filechooser - plyer's linux backend uses distutils removed in Python 3.12
+def _linux_open_file(on_selection, path="/", **kwargs):
+    """Open a native file dialog on Linux using zenity or kdialog."""
+    import subprocess, shutil
+    try:
+        if shutil.which("zenity"):
+            cmd = ["zenity", "--file-selection", f"--filename={path}/"]
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            if result.returncode == 0 and result.stdout.strip():
+                on_selection([result.stdout.strip()])
+            else:
+                on_selection([])
+        elif shutil.which("kdialog"):
+            cmd = ["kdialog", "--getopenfilename", path]
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            if result.returncode == 0 and result.stdout.strip():
+                on_selection([result.stdout.strip()])
+            else:
+                on_selection([])
+        else:
+            on_selection([])
+            raise RuntimeError("No file dialog found. Install zenity: sudo apt install zenity")
+    except Exception as e:
+        on_selection([])
+
+def _linux_open_folder(callback, path="/"):
+    """Open a native folder dialog on Linux using zenity or kdialog."""
+    import subprocess, shutil
+    try:
+        if shutil.which("zenity"):
+            cmd = ["zenity", "--file-selection", "--directory", f"--filename={path}/"]
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            if result.returncode == 0 and result.stdout.strip():
+                callback(result.stdout.strip())
+        elif shutil.which("kdialog"):
+            cmd = ["kdialog", "--getexistingdirectory", path]
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            if result.returncode == 0 and result.stdout.strip():
+                callback(result.stdout.strip())
+    except Exception as e:
+        pass
 
 # IMPORTANT: Set this property for keyboard behavior
 Window.softinput_mode = "below_target"
@@ -209,6 +248,8 @@ class DlImg2SktchApp(MDApp):
                 "text": menu_key,
                 "leading_icon": self.top_menu_items[menu_key]["icon"],
                 "on_release": lambda x=menu_key: self.top_menu_callback(x),
+                "font_size": sp(20),
+                "text_color": (1, 1, 1, 1),
             } for menu_key in self.top_menu_items
         ]
         self.menu = MDDropdownMenu(
@@ -301,13 +342,22 @@ class DlImg2SktchApp(MDApp):
         try:
             if not self.last_upload_path:
                 self.last_upload_path = self.external_storage
-            filechooser.open_file(
-                on_selection=self.handle_img_selection,
-                path=self.last_upload_path,
-                multiple=False,
-                filters=[["*.JPG", "*.jpg", "*.png", "*.jpeg", "*.webp"], "*"],
-                preview=True,
-            )
+            if platform == "android":
+                from plyer import filechooser
+                filechooser.open_file(
+                    on_selection=self.handle_img_selection,
+                    path=self.last_upload_path,
+                    multiple=False,
+                    filters=[["*.JPG", "*.jpg", "*.png", "*.jpeg", "*.webp"], "*"],
+                    preview=True,
+                )
+            else:
+                from threading import Thread
+                Thread(
+                    target=_linux_open_file,
+                    kwargs={"on_selection": self.handle_img_selection, "path": self.last_upload_path},
+                    daemon=True
+                ).start()
             self.is_img_manager_open = True
         except Exception as e:
             self.show_toast_msg(f"Error: {e}", is_error=True)
@@ -320,20 +370,41 @@ class DlImg2SktchApp(MDApp):
 
     def open_img_fldr_manager(self):
         try:
-            self.img_fold_manager.show(self.external_storage)
-            self.is_img_folder_open = True
+            if platform == "android":
+                self.img_fold_manager.show(self.external_storage)
+                self.is_img_folder_open = True
+            else:
+                from threading import Thread
+                Thread(
+                    target=_linux_open_folder,
+                    kwargs={"callback": self.select_img_folder, "path": self.external_storage},
+                    daemon=True
+                ).start()
         except Exception as e:
             self.show_toast_msg(f"Error: {e}", is_error=True)
 
     def open_vid_file_manager(self):
         try:
-            self.vid_file_manager.show(self.external_storage)
-            self.is_vid_manager_open = True
+            if platform == "android":
+                self.vid_file_manager.show(self.external_storage)
+                self.is_vid_manager_open = True
+            else:
+                from threading import Thread
+                Thread(
+                    target=_linux_open_folder,
+                    kwargs={"callback": self._handle_vid_folder_selection, "path": self.external_storage},
+                    daemon=True
+                ).start()
         except Exception as e:
             self.show_toast_msg(f"Error: {e}", is_error=True)
 
+    def _handle_vid_folder_selection(self, path):
+        if path:
+            Clock.schedule_once(lambda dt: self.select_vid_path(path))
+
     def select_img_folder(self, path: str):
-        self.img_fold_exit_manager()
+        if platform == "android":
+            self.img_fold_exit_manager()
         self.image_folder = path
         self.image_path = ""
         self.batch_process = True
@@ -345,6 +416,8 @@ class DlImg2SktchApp(MDApp):
             {
                 "text": f"{option}",
                 "on_release": lambda x=f"{option}": self.set_split_len(x),
+                "font_size": sp(20),
+                "text_color": (1, 1, 1, 1),
             } for option in split_lens
         ]
         self.split_len_options = MDDropdownMenu(
@@ -393,6 +466,8 @@ class DlImg2SktchApp(MDApp):
             {
                 "text": f"{option}",
                 "on_release": lambda x=f"{option}": self.set_split_len(x),
+                "font_size": sp(20),
+                "text_color": (1, 1, 1, 1),
             } for option in split_lens
         ]
         self.split_len_options = MDDropdownMenu(

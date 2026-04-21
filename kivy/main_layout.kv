@@ -24,6 +24,10 @@
         font_style: "Body"
         role: "large"
         adaptive_width: True
+        theme_text_color: "Custom"
+        text_color: "white"
+        theme_font_size: "Custom"
+        font_size: sp(20)
 
     MDCircularProgressIndicator:
         size_hint: None, None
@@ -78,39 +82,49 @@
     MDList:
         adaptive_height: True
         MDListItem:
-            on_release: app.preference_toggle(end_colour, "end_colour")
+            on_release: app.preference_toggle(self, "end_colour")
             MDListItemLeadingIcon:
                 id: end_colour
                 icon: root.end_colour_icon
                 theme_icon_color: "Custom"
                 icon_color: root.end_colour_icon_colour
-                on_release: app.preference_toggle(self, "end_colour")
             MDListItemHeadlineText:
                 text: "End Colour"
+                theme_text_color: "Custom"
+                text_color: "white"
+                theme_font_size: "Custom"
+                font_size: sp(20)
         MDListItem:
-            on_release: app.preference_toggle(draw_hand, "draw_hand")
+            on_release: app.preference_toggle(self, "draw_hand")
             MDListItemLeadingIcon:
                 id: draw_hand
                 icon: root.draw_hand_icon
                 theme_icon_color: "Custom"
                 icon_color: root.draw_hand_icon_colour
-                on_release: app.preference_toggle(self, "draw_hand")
             MDListItemHeadlineText:
                 text: "Hand on Video"
+                theme_text_color: "Custom"
+                text_color: "white"
+                theme_font_size: "Custom"
+                font_size: sp(20)
         MDListItem:
-            on_release: app.preference_toggle(max_1080p, "max_1080p")
+            on_release: app.preference_toggle(self, "max_1080p")
             MDListItemLeadingIcon:
                 id: max_1080p
                 icon: root.max_1080p_icon
                 theme_icon_color: "Custom"
                 icon_color: root.max_1080p_icon_colour
-                on_release: app.preference_toggle(self, "max_1080p")
             MDListItemHeadlineText:
                 text: "1080p Max Resolution"
+                theme_text_color: "Custom"
+                text_color: "white"
+                theme_font_size: "Custom"
+                font_size: sp(20)
 
 
 ### The kivymd main screen ###
 MDScreen:
+    md_bg_color: (1, 1, 1, 1)
 
     MDBoxLayout: # main container
         orientation: 'vertical'
@@ -124,6 +138,10 @@ MDScreen:
                     on_release: app.menu_bar_callback(self)
             MDTopAppBarTitle:
                 text: "Image2Sketch Animation"
+                theme_text_color: "Custom"
+                text_color: "white"
+                theme_font_size: "Custom"
+                font_size: sp(22)
 
         MDGridLayout: # top file browser
             id: file_choose_grid
@@ -138,6 +156,10 @@ MDScreen:
                 size_hint_y: None
                 height: self.texture_size[1]
                 size_hint_x: 0.7
+                theme_text_color: "Custom"
+                text_color: "white"
+                theme_font_size: "Custom"
+                font_size: sp(45)
 
             MDButton:
                 id: btn_img_upload
@@ -148,6 +170,10 @@ MDScreen:
                     icon: "file-image"
                 MDButtonText:
                     text: "Upload"
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    theme_font_size: "Custom"
+                    font_size: sp(20)
 
         MyMDDivider:
             color: (0, 0, 0, 0.25)
@@ -173,43 +199,63 @@ MDScreen:
             # hint texts in first row
             MDLabel:
                 text: "Select video speed"
-                font_style: 'Label'
-                role: 'small'
+                font_style: 'Body'
+                role: 'large'
                 size_hint_y: None
                 height: self.texture_size[1]
                 size_hint_x: 0.2
+                theme_text_color: "Custom"
+                text_color: "white"
+                theme_font_size: "Custom"
+                font_size: sp(45)
 
             MDLabel:
                 text: "Frame rate"
-                font_style: 'Label'
-                role: 'small'
+                font_style: 'Body'
+                role: 'large'
                 size_hint_y: None
                 height: self.texture_size[1]
                 size_hint_x: 0.2
+                theme_text_color: "Custom"
+                text_color: "white"
+                theme_font_size: "Custom"
+                font_size: sp(45)
 
             MDLabel:
                 text: "Object skip rate"
-                font_style: 'Label'
-                role: 'small'
+                font_style: 'Body'
+                role: 'large'
                 size_hint_y: None
                 height: self.texture_size[1]
                 size_hint_x: 0.2
+                theme_text_color: "Custom"
+                text_color: "white"
+                theme_font_size: "Custom"
+                font_size: sp(45)
 
             MDLabel:
                 text: "Background skip rate"
-                font_style: 'Label'
-                role: 'small'
+                font_style: 'Body'
+                role: 'large'
                 size_hint_y: None
                 height: self.texture_size[1]
                 size_hint_x: 0.2
+                theme_text_color: "Custom"
+                text_color: "white"
+                theme_font_size: "Custom"
+                font_size: sp(45)
 
             MDLabel:
                 text: "End image duration"
-                font_style: 'Label'
-                role: 'small'
+                font_style: 'Body'
+                role: 'large'
                 size_hint_y: None
                 height: self.texture_size[1]
                 size_hint_x: 0.2
+                theme_text_color: "Custom"
+                text_color: "white"
+                theme_font_size: "Custom"
+                font_size: sp(45)
 
             # taking the values in next row
             MDDropDownItem:
@@ -218,7 +264,10 @@ MDScreen:
                 size_hint_x: 0.2
                 MDDropDownItemText:
                     text: "speed"
-                    font_size: sp(14)
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    theme_font_size: "Custom"
+                    font_size: sp(20)
 
             MDTextField:
                 id: frame_rate
@@ -230,7 +279,7 @@ MDScreen:
                 helper_text_mode: "persistent"
                 mode: "outlined"
                 size_hint_x: 0.2
-                font_size: sp(14)
+                font_size: sp(45)
 
             MDTextField:
                 id: obj_skip_rate
@@ -242,7 +291,7 @@ MDScreen:
                 helper_text_mode: "persistent"
                 mode: "outlined"
                 size_hint_x: 0.2
-                font_size: sp(14)
+                font_size: sp(45)
 
             MDTextField:
                 id: bck_skip_rate
@@ -254,7 +303,7 @@ MDScreen:
                 helper_text_mode: "persistent"
                 mode: "outlined"
                 size_hint_x: 0.2
-                font_size: sp(14)
+                font_size: sp(45)
 
             MDTextField:
                 id: main_img_duration
@@ -266,7 +315,7 @@ MDScreen:
                 helper_text_mode: "persistent"
                 mode: "outlined"
                 size_hint_x: 0.2
-                font_size: sp(14)
+                font_size: sp(45)
 
         MDGridLayout: # buttons
             cols: 3
@@ -296,6 +345,10 @@ MDScreen:
                     icon: "send"
                 MDButtonText:
                     text: "Submit"
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    theme_font_size: "Custom"
+                    font_size: sp(20)
 
             MDButton:
                 id: btn_reset
@@ -308,3 +361,7 @@ MDScreen:
                     icon: "undo-variant"
                 MDButtonText:
                     text: "Reset"
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    theme_font_size: "Custom"
+                    font_size: sp(20)
