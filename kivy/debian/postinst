@@ -1,0 +1,37 @@
+#!/bin/bash
+# postinst script for img2sketch
+#
+# This script is run after the package is installed or upgraded
+
+set -e
+
+case "$1" in
+    configure)
+        # Set executable permissions on the main binary
+        if [ -f /opt/img2sketch/Img2Sketch ]; then
+            chmod 755 /opt/img2sketch/Img2Sketch
+        fi
+
+        # Update desktop database (if available)
+        if command -v update-desktop-database >/dev/null 2>&1; then
+            update-desktop-database /usr/share/applications 2>/dev/null || true
+        fi
+
+        # Update icon cache (if available)
+        if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+            gtk-update-icon-cache -f -t /usr/share/icons/hicolor 2>/dev/null || true
+        fi
+        ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+        # Nothing to do
+        ;;
+
+    *)
+        echo "postinst called with unknown argument '$1'" >&2
+        exit 1
+        ;;
+esac
+
+# Success
+exit 0

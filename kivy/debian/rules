@@ -1,0 +1,78 @@
+#!/usr/bin/make -f
+
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode
+#export DH_VERBOSE=1
+
+# This is the debhelper compatibility level version
+export DH_COMPAT=13
+
+# Python version
+PYTHON3 := python3
+
+# Application name and version
+APP_NAME := img2sketch
+APP_VERSION := 0.5.0
+
+# Directories
+TOP_DIR := $(CURDIR)
+BUILD_DIR := $(TOP_DIR)/debian/build
+DIST_DIR := $(TOP_DIR)/dist
+VENV_DIR := $(TOP_DIR)/.venv
+
+# Default target
+%:
+	dh $@
+
+# Override dh_auto_build to use PyInstaller
+override_dh_auto_build:
+	# Create virtual environment if it doesn't exist
+	if [ ! -d "$(VENV_DIR)" ]; then \
+		$(PYTHON3) -m venv $(VENV_DIR); \
+	fi
+
+	# Activate virtual environment and install dependencies
+	. $(VENV_DIR)/bin/activate && \
+		pip install --upgrade pip wheel && \
+		pip install pyinstaller && \
+		pip install -r requirements.txt
+
+	# Build with PyInstaller
+	. $(VENV_DIR)/bin/activate && \
+		pyinstaller dlDesktop.spec --noconfirm
+
+# Override dh_auto_install to install files correctly
+override_dh_auto_install:
+	# Create installation directory
+	install -d $(DESTDIR)/opt/$(APP_NAME)
+	install -d $(DESTDIR)/usr/bin
+	install -d $(DESTDIR)/usr/share/applications
+	install -d $(DESTDIR)/usr/share/pixmaps
+
+	# Install the main binary
+	install -m 755 $(DIST_DIR)/Img2Sketch $(DESTDIR)/opt/$(APP_NAME)/
+
+	# Create symlink in /usr/bin
+	ln -sf /opt/$(APP_NAME)/Img2Sketch $(DESTDIR)/usr/bin/$(APP_NAME)
+
+	# Install desktop entry
+	install -m 644 debian/img2sketch.desktop $(DESTDIR)/usr/share/applications/
+
+	# Install icon
+	install -m 644 data/images/favicon.png $(DESTDIR)/usr/share/pixmaps/$(APP_NAME).png
+
+# Override dh_systemd_enable (not needed)
+override_dh_systemd_enable:
+
+# Override dh_installinit (not needed - no init scripts)
+override_dh_installinit:
+
+# Clean target
+override_dh_auto_clean:
+	rm -rf $(VENV_DIR)
+	rm -rf build dist .cache __pycache__
+	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+	find . -type f -name "*.pyc" -delete 2>/dev/null || true
+
+.PHONY: override_dh_auto_build override_dh_auto_install override_dh_auto_clean

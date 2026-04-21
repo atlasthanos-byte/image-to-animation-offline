@@ -1,0 +1,10 @@
+# List of files to install
+# Format: source destination
+# The debian/install file is used by dh_install
+
+# Note: The actual installation is handled by debian/rules
+# This file is kept for reference and potential future use
+
+opt/img2sketch/Img2Sketch usr/bin
+usr/share/applications/img2sketch.desktop usr/share/applications
+usr/share/pixmaps/img2sketch.png usr/share/pixmaps

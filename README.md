@@ -105,6 +105,95 @@ pyinstaller --name "dlDesktop" --windowed --onefile main.py # optional as it is 
 pyinstaller dlDesktop.spec
 ```
 
+### 🐧 Build Debian Package (`.deb`) on Linux
+A native Debian package (`.deb`) can be built for Linux systems (Ubuntu, Debian, Linux Mint, etc.) using the provided build script. The package includes all dependencies and installs to standard locations.
+
+#### Prerequisites
+- Ubuntu 22.04+ or Debian 12+ (bookworm)
+- sudo privileges for installing system dependencies
+- curl (for uv installation)
+
+#### Build Steps
+
+1. Navigate to the kivy directory:
+```bash
+cd image-to-animation-offline/kivy/
+```
+
+2. Run the build script:
+```bash
+# Option 1: Install dependencies and build in one step
+./build_deb.sh --install-deps
+
+# Option 2: If dependencies are already installed
+./build_deb.sh
+```
+
+3. The generated `.deb` package will be created in the kivy directory:
+```bash
+ls -la img2sketch_*.deb
+```
+
+#### Installation
+
+Install the generated package:
+```bash
+sudo dpkg -i img2sketch_0.5.0-1_amd64.deb
+```
+
+If there are missing dependencies, fix them:
+```bash
+sudo apt-get install -f
+sudo dpkg -i img2sketch_0.5.0-1_amd64.deb
+```
+
+Or install with gdebi for automatic dependency resolution:
+```bash
+sudo apt install gdebi
+sudo gdebi img2sketch_0.5.0-1_amd64.deb
+```
+
+#### Usage
+
+After installation, you can:
+- Launch from application menu: **Applications > Graphics > Img2Sketch Offline**
+- Launch from terminal: `img2sketch`
+
+#### Uninstallation
+```bash
+sudo apt remove img2sketch
+```
+
+#### Package Contents
+- Main binary: `/opt/img2sketch/Img2Sketch`
+- Symlink: `/usr/bin/img2sketch`
+- Desktop entry: `/usr/share/applications/img2sketch.desktop`
+- Icon: `/usr/share/pixmaps/img2sketch.png`
+
+#### Troubleshooting
+
+**Build fails with missing dependencies:**
+```bash
+# Install system dependencies manually
+sudo apt install -y build-essential dpkg-dev debhelper python3 python3-pip python3-venv python3-dev libffi-dev libssl-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev libavdevice-dev zlib1g-dev libopencv-dev ffmpeg
+```
+
+**PyInstaller build fails:**
+```bash
+# Clean and rebuild
+./build_deb.sh --clean
+./build_deb.sh
+```
+
+**Package installs but app doesn't launch:**
+```bash
+# Check if binary is executable
+chmod +x /opt/img2sketch/Img2Sketch
+
+# Run from terminal to see error messages
+/opt/img2sketch/Img2Sketch
+```
+
 #### Build Windows exe from Linux
 
 * Install Wine

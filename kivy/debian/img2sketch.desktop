@@ -1,0 +1,18 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Img2Sketch Offline
+Name[en_US]=Img2Sketch Offline
+GenericName=Image to Animation Converter
+GenericName[en_US]=Image to Animation Converter
+Comment=Convert images to sketch-style animation videos offline
+Comment[en_US]=Convert images to sketch-style animation videos offline
+Exec=img2sketch
+Icon=img2sketch
+Terminal=false
+Categories=Graphics;Video;2DGraphics;RasterGraphics;
+Keywords=sketch;animation;video;image;convert;drawing;whiteboard;
+Keywords[en_US]=sketch;animation;video;image;convert;drawing;whiteboard;
+StartupNotify=true
+StartupWMClass=Img2Sketch
+MimeType=image/jpeg;image/png;image/webp;

@@ -1,0 +1,32 @@
+#!/bin/bash
+# prerm script for img2sketch
+#
+# This script is run before the package is removed or upgraded
+
+set -e
+
+case "$1" in
+    remove|upgrade|deconfigure)
+        # Remove the symlink from /usr/bin
+        if [ -L /usr/bin/img2sketch ]; then
+            rm -f /usr/bin/img2sketch
+        fi
+
+        # Update desktop database (if available)
+        if command -v update-desktop-database >/dev/null 2>&1; then
+            update-desktop-database /usr/share/applications 2>/dev/null || true
+        fi
+        ;;
+
+    failed-upgrade)
+        # Nothing to do - let dpkg handle the error
+        ;;
+
+    *)
+        echo "prerm called with unknown argument '$1'" >&2
+        exit 1
+        ;;
+esac
+
+# Success
+exit 0

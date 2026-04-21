@@ -1,0 +1,63 @@
+Source: img2sketch
+Section: graphics
+Priority: optional
+Maintainer: DasLearning Team <support@daslearning.in>
+Build-Depends: debhelper-compat (= 13),
+               dpkg-dev,
+               python3,
+               python3-pip,
+               python3-venv,
+               python3-dev,
+               libffi-dev,
+               libssl-dev,
+               libsdl2-dev,
+               libsdl2-image-dev,
+               libsdl2-mixer-dev,
+               libsdl2-ttf-dev,
+               libportmidi-dev,
+               libswscale-dev,
+               libavformat-dev,
+               libavcodec-dev,
+               libavdevice-dev,
+               zlib1g-dev,
+               libopencv-dev,
+               ffmpeg
+Standards-Version: 4.6.2
+Vcs-Git: https://github.com/daslearning-org/image-to-animation-offline.git
+Vcs-Browser: https://github.com/daslearning-org/image-to-animation-offline
+
+Package: img2sketch
+Architecture: amd64
+Depends: ${misc:Depends},
+         ${python3:Depends},
+         ffmpeg,
+         libavcodec-extra,
+         libavformat59 | libavformat-dev,
+         libswscale7 | libswscale-dev,
+         zlib1g,
+         libgl1-mesa-glx,
+         libglib2.0-0,
+         libstdc++6,
+         libgcc-s1,
+         libc6,
+         libx11-6,
+         libxext6,
+         libxrender1,
+         libxinerama1,
+         libxcursor1,
+         libxrandr2,
+         libxi6,
+         libasound2
+Description: Offline Image to Animation Maker
+ An open-source, cross-platform, offline application that converts
+ static images into sketch-style animation videos. Generates
+ whiteboard drawing style animations from any image without
+ an Internet connection.
+ .
+ Features include:
+   - Generate whiteboard sketch animations from images
+   - Batch processing of multiple images
+   - Configurable speed, frame rate, and video parameters
+   - Support for color or grayscale end frames
+   - Fully offline operation
+   - No watermark or subscription required
